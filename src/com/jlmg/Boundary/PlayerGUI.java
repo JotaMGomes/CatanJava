@@ -15,21 +15,36 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * Defines the player GUI
+ * @author Jose Luiz Gomes
+ *
+ */
 public class PlayerGUI implements IMouseHandler {
 	
-	public Stage playerStage = new Stage();
+	// public GUI objects
+	public Stage playerStage = new Stage(); // stage object
 	
+	// private GUI objects
 	private Button btnRollDices = new Button();
 	private Text txtResources;
 
+	/**
+	 * Initializes a new player GUI
+	 * @param index;  the player index
+	 * @param vColor: the player color
+	 */
 	public PlayerGUI(Integer index, Color vColor) {
 		
+		// creates the interface
 		BorderPane root = new BorderPane();
 		
+		// basic window
 		Rectangle rect01 = new Rectangle(300.0d,15.0d);
 		rect01.setFill(vColor);
 		root.getChildren().add(rect01);
 		
+		// resources info
 		txtResources = new Text();
 		txtResources.setFont(Font.font("Verdana",12));
 		txtResources.setFill(Color.BLACK);
@@ -37,7 +52,7 @@ public class PlayerGUI implements IMouseHandler {
 		txtResources.setY(25.0d);
 		root.getChildren().add(txtResources);
 		
-		
+		// dice info
 		btnRollDices.setText("Roll Dices");
 		btnRollDices.setFont(Font.font("Verdana",10));
 		btnRollDices.setDisable(true);
@@ -53,18 +68,31 @@ public class PlayerGUI implements IMouseHandler {
 		
 	}
 	
+	/**
+	 * Enable/disable roll dice button
+	 * @param isDisabled: boolean to enable/disable button
+	 */
 	public void DisableBtnDice(boolean isDisabled) {
 		btnRollDices.setDisable(isDisabled);
 	}
 	
+	/**
+	 * Button event handler: Roll dice
+	 */
 	private EventHandler<ActionEvent> doRollDice = new EventHandler<ActionEvent>() {
 		@Override
         public void handle(ActionEvent event) {
+			// disable button
 			btnRollDices.setDisable(true);
+			
+			// call event handler
 			handleSpotOnClick();
 		}
 	};
 
+	/**
+	 * Defines event handler do be overridden
+	 */
 	@Override
 	public void handleSpotOnClick() {
 		System.out.println("Roll Dice"); 
