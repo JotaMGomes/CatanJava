@@ -2,28 +2,37 @@ package com.jlmg.Entity;
 
 import com.jlmg.util.CellType;
 
+/**
+ * Defines a land on the board game
+ * @author Jose Luiz Gomes
+ *
+ */
 public class Cell extends Spot {
 	
-	private Integer number;
-	private CellType vCT;
-	private int[] arVertex;
-	private int[] arEdge;
+	private CellType vCT;     // The land type
+	private int[] arVertex;   // Array with land vertices
+	private int[] arEdge;     // Array with land edges
 	
+	/**
+	 * Initializes a new land 
+	 * @param n: The land id
+	 * @param ct: The land type
+	 */
 	public Cell(Integer n, CellType ct) {
-		this.number = n;
+		setIndex(n);
 		this.vCT = ct;
 	}
+	
+	/**
+	 * Getters and Setters
+	 */
 	
 	public CellType getCellType() {
 		return this.vCT;
 	}
 	
 	public String getStrNumber() {
-		return this.number.toString();
-	}
-	
-	public Integer getNumber() {
-		return this.number;
+		return getIndex().toString();
 	}
 	
 	public void setArVertex(int[] arrayV) {

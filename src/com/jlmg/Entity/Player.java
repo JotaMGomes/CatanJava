@@ -10,76 +10,76 @@ import com.jlmg.util.CellType;
 
 import javafx.scene.paint.Color;
 
+/**
+ * Defines a player
+ * @author Jose Luiz Gomes
+ *
+ */
 public class Player extends PlayerGUI implements IMouseHandler{
 	
-	private Color vColor;
-	private int numPoints, maxRow, maxArm;
+	private Color vColor;  // player color
+	/* number of points, 
+	 * max number of consecutive roads, 
+	 * maximum number of played army cards
+	 */
+	private int numPoints, maxRoad, maxArmy; 
+	// array of development cards
 	private ArrayList<DevCard> lstDevCard = new ArrayList<DevCard>();
+	// hash map of resources cards
 	private HashMap<CellType, Integer> hmResCard = new HashMap<CellType, Integer>();
 
-	
-	
-	//public c wPlayer;
-	
+	/**
+	 * Initializes a new player
+	 * @param vColor: player color
+	 * @param index:  player index
+	 */
 	public Player(Color vColor, Integer index) {
 		super(index, vColor);
 		this.vColor = vColor;
 		this.numPoints = 0;
-		this.maxRow = 0;
-		this.maxArm = 0;
+		this.maxRoad = 0;
+		this.maxArmy = 0;
 		hmResCard.put(CellType.BRICK, 0);
 		hmResCard.put(CellType.WOOD, 0);
 		hmResCard.put(CellType.WHEAT, 0);
 		hmResCard.put(CellType.SHEEP, 0);
 		hmResCard.put(CellType.ORE, 0);
 	}
-
+	
 	/**
-	 * get player color
-	 * @return player color
+	 * Getters and Setters
 	 */
+
 	public Color getvColor() {
 		return vColor;
 	}
 
-	/**
-	 * set player color
-	 * @param vColor
-	 */
 	public void setvColor(Color vColor) {
 		this.vColor = vColor;
 	}
 
-	/**
-	 * get player points
-	 * @return player points
-	 */
 	public int getNumPoints() {
 		return numPoints;
 	}
 
-	/**
-	 * add points to player
-	 * @param numPoints
-	 */
 	public void addPoints(int numPoints) {
 		this.numPoints = this.numPoints + numPoints;
 	}
 
 	public int getMaxRow() {
-		return maxRow;
+		return maxRoad;
 	}
 
 	public void setMaxRow(int maxRow) {
-		this.maxRow = maxRow;
+		this.maxRoad = maxRow;
 	}
 
 	public int getMaxArm() {
-		return maxArm;
+		return maxArmy;
 	}
 
 	public void setMaxArm(int maxArm) {
-		this.maxArm = maxArm;
+		this.maxArmy = maxArm;
 	}
 	
 	public void addDevCard(DevCard card) {
@@ -99,6 +99,7 @@ public class Player extends PlayerGUI implements IMouseHandler{
 	 */
 	@Override
 	public void handleSpotOnClick() {
+		// start a new player turn
 		GameCT.startTurn();
 	}
 	
@@ -106,6 +107,7 @@ public class Player extends PlayerGUI implements IMouseHandler{
 	 * update player resources
 	 */
 	public void updatePlayerResources() {
+		// update the player resources display
 		updateResources(hmResCard);
 	}
 	

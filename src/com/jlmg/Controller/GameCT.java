@@ -284,7 +284,7 @@ public class GameCT {
 		for (Cell vCell : arCell) {
 			
 			//if cell number = totalDice and thief is not there
-			if (vCell.getNumber() == totalDice && !vCell.vCircle.isVisible()) {
+			if (vCell.getIndex() == totalDice && !vCell.vCircle.isVisible()) {
 				
 				//verify if vertices has a village or city
 				for (int index : vCell.getArVertex()) {

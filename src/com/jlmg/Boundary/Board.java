@@ -125,11 +125,11 @@ public class Board extends Application {
 				vGrpH.getChildren().addAll(arPlHex[k]);
 				
 				// Draw hexagon numbers
-				if (GameCT.arCell[k].getNumber() > 0) {
+				if (GameCT.arCell[k].getIndex() > 0) {
 					arTextNum[k] = new Text(GameCT.arCell[k].getStrNumber());
 					arTextNum[k].setFont(Font.font("Verdana",20));
 					arTextNum[k].setFill(Color.BLACK);
-					arTextNum[k].setX(px + ((GameCT.arCell[k].getNumber() < 10) ? -6.0d : -12.0d));
+					arTextNum[k].setX(px + ((GameCT.arCell[k].getIndex() < 10) ? -6.0d : -12.0d));
 					arTextNum[k].setY(py + hexSize + 6.0d);
 					
 					vGrpH.getChildren().addAll(arTextNum[k]);
