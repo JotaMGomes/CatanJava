@@ -15,19 +15,24 @@ import com.jlmg.util.GameState;
 
 import javafx.scene.paint.Color;
 
+/**
+ * Game logic
+ * @author Jose Luiz Gomes
+ *
+ */
 public class GameCT {
 
-	private static Board vBoard;
-	public static Integer currPlayer = 0;
-	public static GameState gameStep = GameState.START0;
+	private static Board vBoard; // board object
+	public static Integer currPlayer = 0; // current player number
+	public static GameState gameStep = GameState.START0; // game state
 	
 	//define arrays
-	public static Dice[] diceCT = new Dice[2];
-	public static Player[] arPlayer = new Player[3];
-	public static DevCard[] deckDev = new DevCard[25];
-	public static Cell[] arCell = new Cell[19];
-	public static Vertex[] arVertex = new Vertex[54];
-	public static Edge[] arEdge = new Edge[72];
+	public static Dice[] diceCT = new Dice[2];         // dices
+	public static Player[] arPlayer = new Player[3];   // players
+	public static DevCard[] deckDev = new DevCard[25]; // development cards
+	public static Cell[] arCell = new Cell[19];        // land cells
+	public static Vertex[] arVertex = new Vertex[54];  // vertices
+	public static Edge[] arEdge = new Edge[72];        // edges (roads)
 	
 	/**
 	 * Initialize game objects
@@ -37,7 +42,7 @@ public class GameCT {
 	}
 	
 	/**
-	 * assign the board for the game
+	 * Assign the board for the game
 	 * @param newBoard
 	 */
 	public static void setBoard(Board newBoard) {
@@ -48,65 +53,70 @@ public class GameCT {
 	 * Initialize arrays of objects
 	 */
 	public static void initArrays() {
-		//create array of cells
+		// create array of cells
 		createArrayCells();
 		
-		//create array of vertices
+		// create array of vertices
 		createArrayVertices();
 		
-		//create array of Edges
+		// create array of Edges
 		createArrayEdges();
 		
-		//link edges and vertices
+		// link edges and vertices
 		linkEdgesAndVertices();
 	}
 	
 	
-	public static void playGame() {
-		startGame();
-	}
-	
-	private static void startGame() {
+	/**
+	 * Start Game
+	 */
+	public static void startGame() {
 		startBoard();
 		initDecks();
 		initPlayers();
 		initDices();
 		currPlayer = 0;
 		rollDices();
-		playFase1();
+		playPhase1();
 	}
 	
+	/**
+	 * Start board
+	 */
 	private static void startBoard() {
 		
-		//Hide all vertices spots
+		// hide all vertices spots
 		for (Vertex vVtc : arVertex) {
 			vVtc.vCircle.setVisible(false);
 		}
 		
-		//Hide all edges spots
+		// hide all edges spots
 		for (Edge vEdg : arEdge) {
 			vEdg.vCircle.setVisible(false);
 		}
 		
-		//Hide all thief spots
+		// hide all thief spots
 		for (Cell vCell : arCell) {
 			vCell.vCircle.setVisible(vCell.getCellType() == CellType.DESERT);
 		}
 	}
 	
+	/**
+	 * Initializes decks
+	 */
 	private static void initDecks() {
 		
-		//Create 25 dev cards
+		// create 25 dev cards
 		for (int i = 0; i < 21; i++) {
 			
 			if (i < 15) 
-				//14 knigts
+				// 14 knigts
 				deckDev[i] = new DevCard(DevCardType.KNIGHT);
 			else if (i < 19)
-				//6 victory
+				// 6 victory
 				deckDev[i] = new DevCard(DevCardType.VICTORY);
 			else {
-				//2 road build
+				// 2 road build
 				deckDev[19] = new DevCard(DevCardType.ROAD_BUILD);
 				deckDev[20] = new DevCard(DevCardType.ROAD_BUILD);
 				//2 monopoly
@@ -119,6 +129,9 @@ public class GameCT {
 		}
 	}
 	
+	/**
+	 * Initializes players
+	 */
 	private static void initPlayers() {
 		arPlayer[0] = new Player(Color.BROWN, 0);
 		arPlayer[0].playerStage.setX(1000);
@@ -133,103 +146,130 @@ public class GameCT {
 		arPlayer[2].playerStage.setY(550);
 	}
 	
-	private static void playFase1() {
-		
+	/**
+	 * Play phase 1
+	 */
+	private static void playPhase1() {
+		// display current player
 		vBoard.updateCurrPlayer();
+		// display all free vertices
 		vBoard.showAllFreeVertices(true);
-		
 	}
 	
-	public static void nextStep() {
-		
-		if (gameStep == GameState.START1) {
-			
-			int totalVillage = 0;
-			for (Vertex vAux : arVertex) {
-				if (vAux.getPlayerNum() > -1) {
-					totalVillage++;
-				}
-			}
-			
-			int totalRoads = 0;
-			for (Edge eAux : arEdge) {
-				if (eAux.getPlayerNum() > -1) {
-					totalRoads++;
-				}
-			}
-			
-			if (totalVillage == 6 && totalRoads == 6) {
-				gameStep = GameState.PLAY_DICE;
-			} 
-		}
-	}
 	
+//	/**
+//	 * Play next step
+//	 */
+//	public static void nextStep() {
+//		
+//		// start phase 1
+//		if (gameStep == GameState.START1) {
+//			
+//			// initialize total village
+//			int totalVillage = 0;
+//			for (Vertex vAux : arVertex) {
+//				if (vAux.getPlayerNum() > -1) {
+//					totalVillage++;
+//				}
+//			}
+//			
+//			int totalRoads = 0;
+//			for (Edge eAux : arEdge) {
+//				if (eAux.getPlayerNum() > -1) {
+//					totalRoads++;
+//				}
+//			}
+//			
+//			if (totalVillage == 6 && totalRoads == 6) {
+//				gameStep = GameState.PLAY_DICE;
+//			} 
+//		}
+//	}
+	
+	/**
+	 * Display all edges linked to a vertex
+	 * @param numVertex: vertex index
+	 * @param showEdge   show/hide edge
+	 */
 	public static void showEdgesFromVertex(int numVertex, boolean showEdge) {
+		// hide all free vertices
 		vBoard.showAllFreeVertices(false);
+		// display/hide edges linked to the vertex
 		vBoard.showEdgesFromVertex(numVertex, showEdge);
+		// update board msg
 		vBoard.updateMsg("Put a road");
 	}
 	
+	/**
+	 * Hide all free edges
+	 */
 	public static void hideAllFreeEdges() {
+		// hide all free edges
 		vBoard.hideAllFreeEdges();
+		// next player turn
 		nextPlayer();
 	}
 	
+	/**
+	 * Next player turn
+	 */
 	private static void nextPlayer() {
 		
-		
 		if (gameStep == GameState.START0) {
-			//first round of start stage
+			// first round of start stage
 			
-			//set next player
+			// set next player
 			currPlayer++;
 			if (currPlayer > 2) {
 				
-				//first round has ended, start second round
-				//with the same player
+				// first round has ended, start second round
+				// with the same player
 				currPlayer = 2;
+				// set next game state
 				gameStep = GameState.START1;
 			}
 			
-			//show all free vertices
+			// show all free vertices
 			vBoard.showAllFreeVertices(true);
 			
-			//update message
+			// update message
 			vBoard.updateMsg("Put a village");
 			
 		} else if (gameStep == GameState.START1) {
-			//second round of start stage
+			// second round of start stage
 			
-			//set next player
+			// set next player
 			currPlayer--;
 			if (currPlayer < 0) {
 				
-				//second round has finished, enable play dice
-				//with the same player
+				// second round has finished, enable play dice
+				// with the same player
 				currPlayer = 0;
 				
-				//hide all free vertices
+				// hide all free vertices
 				vBoard.showAllFreeVertices(false);
 				
-				//update game state to PLAY_DICE
+				// update game state to PLAY_DICE
 				gameStep = GameState.PLAY_DICE;
 				
-				//update message
+				// update message
 				vBoard.updateMsg("Roll the dices");
 				
-				//enable roll dice button
+				// enable roll dice button
 				arPlayer[currPlayer].DisableBtnDice(false);
 			} else {
+				// display all free vertices
 				vBoard.showAllFreeVertices(true);
+				// update msg
 				vBoard.updateMsg("Put a village");
 			}
 		} else {
-			//set next player
+			// set next player
 			currPlayer++;
 			if (currPlayer > 2) 
 				currPlayer = 0;
 			
-			//enable roll dice button
+			// enable roll dice button
 			arPlayer[currPlayer].DisableBtnDice(false);
 		}
 		
@@ -239,7 +279,7 @@ public class GameCT {
 	}
 	
 	/**
-	 * init dices
+	 * Initializes dices
 	 */
 	private static void initDices() {
 		diceCT[0] = new Dice();
@@ -277,22 +317,22 @@ public class GameCT {
 	 */
 	private static void dealCards() {
 		
-		//get sum of dices
+		// get sum of dices
 		final Integer totalDice = diceCT[0].getValue() + diceCT[1].getValue();
 		
-		//iterate through each cell 
+		// iterate through each cell 
 		for (Cell vCell : arCell) {
 			
-			//if cell number = totalDice and thief is not there
+			// if cell number = totalDice and thief is not there
 			if (vCell.getIndex() == totalDice && !vCell.vCircle.isVisible()) {
 				
-				//verify if vertices has a village or city
+				// verify if vertices has a village or city
 				for (int index : vCell.getArVertex()) {
 					if (arVertex[index].getPlayerNum() > -1) {
-						//ad a card for a village
+						// add a card for a village
 						arPlayer[arVertex[index].getPlayerNum()].addResCard(vCell.getCellType());
 						
-						//if it is a city, add one more card
+						// if it is a city, add one more card
 						if(arVertex[index].getLevel() > 1) {
 							arPlayer[arVertex[index].getPlayerNum()].addResCard(vCell.getCellType());
 						}
@@ -302,7 +342,7 @@ public class GameCT {
 			}
 		}
 		
-		//update player resources
+		// update player resources
 		for (Player vP : arPlayer) {
 			vP.updatePlayerResources();
 		}
@@ -314,10 +354,10 @@ public class GameCT {
 	 */
 	private static void createArrayCells() {
 		
-		//array with dice number of cells
+		// array with dice number of cells
 		final int[] arDiceNumber = {6,3,8,2,4,5,10,5,9,0,5,9,10,11,3,12,8,4,11};
 		
-		//array with cell types
+		// array with cell types
 		CellType[] arCT = {CellType.WOOD, CellType.SHEEP, CellType.SHEEP,
 				CellType.WHEAT, CellType.ORE, CellType.WHEAT, CellType.WOOD,
 				CellType.WOOD, CellType.BRICK, CellType.DESERT, CellType.ORE, CellType.WHEAT,
@@ -325,7 +365,7 @@ public class GameCT {
 				CellType.BRICK, CellType.SHEEP, CellType.BRICK
 		};
 		
-		//create objects
+		// create objects
 		for (int k = 0; k < 19; k++) {
 			arCell[k] = new Cell(arDiceNumber[k],arCT[k]);
 		}
@@ -336,7 +376,7 @@ public class GameCT {
 	 */
 	private static void createArrayVertices() {
 		
-		//vertices for each cell
+		// vertices for each cell
 		final int[][] arVertexCell = {
 				{0,1,2,8,9,10}, {2,3,4,10,11,12}, {4,5,6,12,13,14},
 				{7,8,9,17,18,19}, {9,10,11,19,20,21}, {11,12,13,21,22,23}, {13,14,15,23,24,25},
@@ -345,16 +385,16 @@ public class GameCT {
 				{39,40,41,47,48,49}, {41,42,43,49,50,51}, {43,44,45,51,52,53}
 		};
 		
-		//iterate through cells
+		// iterate through cells
 		for (int k = 0; k < 19; k++) {
 			
-			//link vertex to cell
+			// link vertex to cell
 			arCell[k].setArVertex(arVertexCell[k]);
 			
-			//iterate through all vertices of this cell
+			// iterate through all vertices of this cell
 			for (int l = 0; l < arVertexCell[k].length; l++) {
 				
-				//if vertex is not created yet, create it
+				// if vertex is not created yet, create it
 				if (arVertex[arVertexCell[k][l]] == null) {
 					arVertex[arVertexCell[k][l]] = new Vertex(arVertexCell[k][l]);
 				}
@@ -368,7 +408,7 @@ public class GameCT {
 	 */
 	private static void createArrayEdges() {
 		
-		//edges for each cell
+		// edges for each cell
 		final int[][] arEdgeCell = {
 				{0,1,6,7,11,12}, {2,3,7,8,13,14}, {4,5,8,9,15,16},
 				{10,11,18,19,24,25}, {12,13,19,20,26,27}, {14,15,20,21,28,29}, {16,17,21,22,30,31},
@@ -377,16 +417,16 @@ public class GameCT {
 				{55,56,62,63,66,67}, {57,58,63,64,68,69}, {59,60,64,65,70,71}
 		};
 		
-		//iterate through cells
+		// iterate through cells
 		for (int k = 0; k < 19; k++) {
 			
-			//link edge to cell
+			// link edge to cell
 			arCell[k].setArEdge(arEdgeCell[k]);
 			
-			//iterate through all edges of this cell
+			// iterate through all edges of this cell
 			for (int l = 0; l < arEdgeCell[k].length; l++) {
 				
-				//if edge is not created yet, create it
+				// if edge is not created yet, create it
 				if (arEdge[arEdgeCell[k][l]] == null) {
 					arEdge[arEdgeCell[k][l]] = new Edge(arEdgeCell[k][l]);
 				}
@@ -399,7 +439,7 @@ public class GameCT {
 	 */
 	private static void linkEdgesAndVertices() {
 		
-		//vertices for each edge
+		// vertices for each edge
 		int[][] arEdgVtc = {
 				{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},
 				{0,8},{2,10},{4,12},{6,14},
@@ -414,22 +454,22 @@ public class GameCT {
 				{47,48},{48,49},{49,50},{50,51},{51,52},{52,53}
 		};
 		
-		//iterate through all edges
+		// iterate through all edges
 		for (int k = 0; k < 72; k++) {
 			arEdge[k].addVertex(arEdgVtc[k][0]);
 			arEdge[k].addVertex(arEdgVtc[k][1]);
 		}
 		
-		//iterate through all edges
+		// iterate through all edges
 		for (int k = 0; k < 72; k++)
 			
-			//iterate through vertices linked to the edge
+			// iterate through vertices linked to the edge
 			for (int l = 0; l < 2; l++)
 				if (!arVertex[arEdge[k].getVertex(l)].hasEdge(k)) 
 					arVertex[arEdge[k].getVertex(l)].addEdge(k);
 		
 		
-		//iterate through all cells
+		// iterate through all cells
 		for (int k = 0; k < 19; k++) {
 			
 			for (int l: arCell[k].getArVertex())

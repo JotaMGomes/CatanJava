@@ -23,7 +23,7 @@ public class Main extends Application {
 			GameCT.setBoard(vBoard);
 			
 			//play game
-			GameCT.playGame();		
+			GameCT.startGame();		
 			
 		} catch(Exception e) {
 			e.printStackTrace();
