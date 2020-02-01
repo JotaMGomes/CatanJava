@@ -1,7 +1,7 @@
 package com.jlmg.Boundary;
 
 /**
- * Interface for Mouse Handler
+ * Interface for Spot actions Handlers
  * @author Jose Luiz Gomes
  *
  */

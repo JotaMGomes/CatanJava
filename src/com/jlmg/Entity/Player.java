@@ -3,7 +3,7 @@ package com.jlmg.Entity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.jlmg.Boundary.IMouseHandler;
+import com.jlmg.Boundary.IPlayerHandler;
 import com.jlmg.Boundary.PlayerGUI;
 import com.jlmg.Controller.GameCT;
 import com.jlmg.util.CellType;
@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
  * @author Jose Luiz Gomes
  *
  */
-public class Player extends PlayerGUI implements IMouseHandler{
+public class Player extends PlayerGUI implements IPlayerHandler{
 	
 	private Color vColor;  // player color
 	/* number of points, 
@@ -95,12 +95,21 @@ public class Player extends PlayerGUI implements IMouseHandler{
 	}
 	
 	/**
-	 * mouse handler
+	 * btn Roll dices handler
 	 */
 	@Override
-	public void handleSpotOnClick() {
+	public void btnDiceOnClick() {
 		// start a new player turn
-		GameCT.startTurn();
+		GameCT.diceAction();
+	}
+	
+	/**
+	 * btn Done handler
+	 */
+	@Override
+	public void btnDoneOnClick() {
+		// finish the player turn
+		GameCT.finishTurn();
 	}
 	
 	/**
@@ -109,6 +118,17 @@ public class Player extends PlayerGUI implements IMouseHandler{
 	public void updatePlayerResources() {
 		// update the player resources display
 		updateResources(hmResCard);
+	}
+	
+	/**
+	 * enable trade button if player has at least one raw material
+	 */
+	public void verifyTradeBtn() {
+		disableBtnTrade(hmResCard.get(CellType.BRICK) +
+			    hmResCard.get(CellType.WOOD) +
+			    hmResCard.get(CellType.WHEAT) +
+			    hmResCard.get(CellType.SHEEP) +
+			    hmResCard.get(CellType.ORE) == 0);
 	}
 	
 }

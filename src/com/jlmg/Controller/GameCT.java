@@ -1,5 +1,6 @@
 package com.jlmg.Controller;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import com.jlmg.Boundary.Board;
@@ -156,36 +157,6 @@ public class GameCT {
 		vBoard.showAllFreeVertices(true);
 	}
 	
-	
-//	/**
-//	 * Play next step
-//	 */
-//	public static void nextStep() {
-//		
-//		// start phase 1
-//		if (gameStep == GameState.START1) {
-//			
-//			// initialize total village
-//			int totalVillage = 0;
-//			for (Vertex vAux : arVertex) {
-//				if (vAux.getPlayerNum() > -1) {
-//					totalVillage++;
-//				}
-//			}
-//			
-//			int totalRoads = 0;
-//			for (Edge eAux : arEdge) {
-//				if (eAux.getPlayerNum() > -1) {
-//					totalRoads++;
-//				}
-//			}
-//			
-//			if (totalVillage == 6 && totalRoads == 6) {
-//				gameStep = GameState.PLAY_DICE;
-//			} 
-//		}
-//	}
-	
 	/**
 	 * Display all edges linked to a vertex
 	 * @param numVertex: vertex index
@@ -207,13 +178,13 @@ public class GameCT {
 		// hide all free edges
 		vBoard.hideAllFreeEdges();
 		// next player turn
-		nextPlayer();
+		nextState();
 	}
 	
 	/**
 	 * Next player turn
 	 */
-	private static void nextPlayer() {
+	private static void nextState() {
 		
 		if (gameStep == GameState.START0) {
 			// first round of start stage
@@ -256,21 +227,33 @@ public class GameCT {
 				vBoard.updateMsg("Roll the dices");
 				
 				// enable roll dice button
-				arPlayer[currPlayer].DisableBtnDice(false);
+				arPlayer[currPlayer].disableBtnDice(false);
 			} else {
 				// display all free vertices
 				vBoard.showAllFreeVertices(true);
 				// update msg
 				vBoard.updateMsg("Put a village");
 			}
-		} else {
+		} else if (gameStep == GameState.PLAY_DICE) {
 			// set next player
 			currPlayer++;
 			if (currPlayer > 2) 
 				currPlayer = 0;
 			
 			// enable roll dice button
-			arPlayer[currPlayer].DisableBtnDice(false);
+			arPlayer[currPlayer].disableBtnDice(false);
+			
+		} else if (gameStep == GameState.WAIT_PLAYER_ACTION) {
+			
+			// verify if player can start a trade
+			arPlayer[currPlayer].verifyTradeBtn();
+			
+			// disable roll dice button
+			arPlayer[currPlayer].disableBtnDice(true);
+			
+			// enable done button
+		    arPlayer[currPlayer].disableBtnDone(false);
+		
 		}
 		
 		//update current player message
@@ -290,9 +273,36 @@ public class GameCT {
 	 * star new turn
 	 */
 	public static void startTurn() {
+		nextState();
+	}
+	
+	/**
+	 * Finish the current turn
+	 */
+	public static void finishTurn() {
+		
+		// disable all buttons from current player
+		arPlayer[currPlayer].disableAllBtns();
+		
+		// update game state to Play Dice
+		gameStep = GameState.PLAY_DICE;
+		
+		// call next player
+		nextState();
+	}
+	
+	/**
+	 * roll dices button action
+	 */
+	public static void diceAction() {
 		rollDices();
 		dealCards();
-		nextPlayer();
+		
+		// update game state to TRADE
+		gameStep = GameState.WAIT_PLAYER_ACTION;
+		
+		// call next stage
+		nextState();
 	}
 	
 	/**
@@ -309,6 +319,21 @@ public class GameCT {
 			diceCT[i].rollDice();
 			vBoard.txtDice[i].setText("Dice " + i + ": " + diceCT[i].getValue());
 		}
+		
+	}
+	
+	/**
+	 * deal cards for stage 1
+	 */
+	public static void dealCardsStage1(ArrayList<Integer> lstCell) {
+		
+		// for each cell linked to the vertex
+		for (Integer i : lstCell)
+			// add card to player
+			arPlayer[currPlayer].addResCard(arCell[i].getCellType());
+		
+		// update the player resources display 
+		arPlayer[currPlayer].updatePlayerResources();
 		
 	}
 	

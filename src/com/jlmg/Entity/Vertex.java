@@ -80,8 +80,12 @@ public class Vertex extends Spot implements IMouseHandler {
 			vCircle.setFill(GameCT.arPlayer[GameCT.currPlayer].getvColor());
 			// put a village
 			level++;
-			//display edges from this vertex
+			// display edges from this vertex
 			GameCT.showEdgesFromVertex(getIndex(), true);
+			
+			// deal cards to player
+			if (GameCT.gameStep == GameState.START1)
+				GameCT.dealCardsStage1(lstCell);
 		}
 	}
 }
