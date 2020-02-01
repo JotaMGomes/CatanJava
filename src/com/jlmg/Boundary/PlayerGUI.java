@@ -29,9 +29,15 @@ public class PlayerGUI implements IPlayerHandler {
 	// private GUI objects
 	private Button btnRollDices = new Button();
 	private Button btnDevCard[] = new Button[5];
-	private Button btnNewDevCard = new Button();
 	private Button btnTrade = new Button();
 	private Button btnDone = new Button();
+	private Button btnNewDevCard = new Button();
+	private Button btnNewVillage = new Button();
+	private Button btnNewCity = new Button();
+	private Button btnNewRoad = new Button();
+	
+	
+	
 	private Text txtResources;
 
 	/**
@@ -74,6 +80,7 @@ public class PlayerGUI implements IPlayerHandler {
 		btnDevCard[4] = new Button();
 		btnDevCard[4].setText("YEARS PLENTY 0");
 		
+		// new row
 		HBox hb1 = new HBox();
 		for (int i=0;i<5;i++) {
 			btnDevCard[i].setFont(Font.font("Verdana",10));
@@ -82,35 +89,62 @@ public class PlayerGUI implements IPlayerHandler {
 		}		
 		root.add(hb1, 0, 2);
 		
+		// new row
 		HBox hb2 = new HBox();
+		
+		// new village
+		btnNewVillage.setText("New Village");
+		btnNewVillage.setFont(Font.font("Verdana",10));
+		btnNewVillage.setDisable(true);
+		// btnNewVillage.setOnAction(doRollDice);
+		hb2.getChildren().add(btnNewVillage);
+		
+		// new city
+		btnNewCity.setText("New City");
+		btnNewCity.setFont(Font.font("Verdana",10));
+		btnNewCity.setDisable(true);
+		// btnNewCity.setOnAction(doRollDice);
+		hb2.getChildren().add(btnNewCity);
+		
+		// new road
+		btnNewRoad.setText("New Road");
+		btnNewRoad.setFont(Font.font("Verdana",10));
+		btnNewRoad.setDisable(true);
+		// btnNewRoad.setOnAction(doRollDice);
+		hb2.getChildren().add(btnNewRoad);
+		
+		// new Dev Card
+		btnNewDevCard.setText("New Dev Card");
+		btnNewDevCard.setFont(Font.font("Verdana",10));
+		btnNewDevCard.setDisable(true);
+		hb2.getChildren().add(btnNewDevCard);
+		
+		root.add(hb2, 0, 3);
+		
+		// new row
+		HBox hb3 = new HBox();
 		
 		// dice info
 		btnRollDices.setText("Roll Dices");
 		btnRollDices.setFont(Font.font("Verdana",10));
 		btnRollDices.setDisable(true);
 		btnRollDices.setOnAction(doRollDice);
-		hb2.getChildren().add(btnRollDices);
-		
-		// new Dev Card
-		btnNewDevCard.setText("New Dev Card");
-		btnNewDevCard.setFont(Font.font("Verdana",10));
-		btnNewDevCard.setDisable(true);
-		hb2.getChildren().add(btnNewDevCard);	
+		hb3.getChildren().add(btnRollDices);
 		
 		// trade
 		btnTrade.setText("Trade");
 		btnTrade.setFont(Font.font("Verdana",10));
 		btnTrade.setDisable(true);
-		hb2.getChildren().add(btnTrade);
+		hb3.getChildren().add(btnTrade);
 		
 		// finish turn
 		btnDone.setText("Done");
 		btnDone.setFont(Font.font("Verdana",10));
 		btnDone.setDisable(true);
 		btnDone.setOnAction(doDone);
-		hb2.getChildren().add(btnDone);
+		hb3.getChildren().add(btnDone);
 		
-		root.add(hb2, 0, 3);
+		root.add(hb3, 0, 4);
 		
 		Scene secondScene = new Scene(root, BoxWidth, 100);
 		
@@ -191,6 +225,9 @@ public class PlayerGUI implements IPlayerHandler {
 		btnNewDevCard.setDisable(true);
 		btnTrade.setDisable(true);
 		btnDone.setDisable(true);
+		btnNewCity.setDisable(true);
+		btnNewVillage.setDisable(true);
+		btnNewRoad.setDisable(true);
 		
 		for (int i=0;i<5;i++) {
 			btnDevCard[i].setDisable(true);	
@@ -209,5 +246,33 @@ public class PlayerGUI implements IPlayerHandler {
 	 */
 	public void disableBtnDone(boolean isDisabled) {
 		btnDone.setDisable(isDisabled);
+	}
+	
+	/** 
+	 * enable/disable road Button
+	 */
+	public void disableBtnRoad(Boolean isDisabled) {
+		btnNewRoad.setDisable(isDisabled);
+	}
+	
+	/** 
+	 * enable/disable village Button
+	 */
+	public void disableBtnVillage(Boolean isDisabled) {
+		btnNewVillage.setDisable(isDisabled);
+	}
+	
+	/** 
+	 * enable/disable city Button
+	 */
+	public void disableBtnCity(Boolean isDisabled) {
+		btnNewCity.setDisable(isDisabled);
+	}
+	
+	/** 
+	 * enable/disable dev card Button
+	 */
+	public void disableBtnDevCard(Boolean isDisabled) {
+		btnNewDevCard.setDisable(isDisabled);
 	}
 }

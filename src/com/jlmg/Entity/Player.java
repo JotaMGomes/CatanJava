@@ -121,7 +121,7 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 	}
 	
 	/**
-	 * enable trade button if player has at least one raw material
+	 * enable trade button if player has at least one resource card
 	 */
 	public void verifyTradeBtn() {
 		disableBtnTrade(hmResCard.get(CellType.BRICK) +
@@ -129,6 +129,37 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 			    hmResCard.get(CellType.WHEAT) +
 			    hmResCard.get(CellType.SHEEP) +
 			    hmResCard.get(CellType.ORE) == 0);
+	}
+	
+	/**
+	 * enable/disable new objects buttons
+	 */
+	public void verifyNewBtns() {
+		/*
+		 * enable road if the player has:
+		 * 1 BRICK + 1 WOOD
+		 */
+		disableBtnRoad(!(hmResCard.get(CellType.BRICK) > 0 && hmResCard.get(CellType.WOOD) > 0));
+		
+		/*
+		 * enable city if the player has:
+		 * 1 BRICK + 1 WOOD + 1 WHEAT + 1 SHEEP
+		 */
+		disableBtnVillage(!(hmResCard.get(CellType.BRICK) > 0 && hmResCard.get(CellType.WOOD) > 0
+				&& hmResCard.get(CellType.WHEAT) > 0 && hmResCard.get(CellType.SHEEP) > 0));
+		
+		/*
+		 * enable city if the player has:
+		 * 2 WHEAT + 3 ORE
+		 */
+		disableBtnCity(!(hmResCard.get(CellType.WHEAT) > 1 && hmResCard.get(CellType.ORE) > 2));
+		
+		/* 
+		 * enable dev if the player has:
+		 * 1 WHEAT + 1 SHEEP + 1 ORE
+		 */
+		disableBtnDevCard(!(hmResCard.get(CellType.WHEAT) > 0 && hmResCard.get(CellType.SHEEP) > 0
+				&& hmResCard.get(CellType.ORE) > 0));
 	}
 	
 }

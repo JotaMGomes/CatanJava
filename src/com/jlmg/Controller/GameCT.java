@@ -251,6 +251,9 @@ public class GameCT {
 			// disable roll dice button
 			arPlayer[currPlayer].disableBtnDice(true);
 			
+			// enable/disable new object buttons
+			arPlayer[currPlayer].verifyNewBtns();
+			
 			// enable done button
 		    arPlayer[currPlayer].disableBtnDone(false);
 		
