@@ -3,6 +3,7 @@ package com.jlmg.Boundary;
 import java.util.HashMap;
 
 import com.jlmg.util.CellType;
+import com.jlmg.util.DevCardType;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -117,6 +118,7 @@ public class PlayerGUI implements IPlayerHandler {
 		btnNewDevCard.setText("New Dev Card");
 		btnNewDevCard.setFont(Font.font("Verdana",10));
 		btnNewDevCard.setDisable(true);
+		btnNewDevCard.setOnAction(doDevCard);
 		hb2.getChildren().add(btnNewDevCard);
 		
 		root.add(hb2, 0, 3);
@@ -188,6 +190,18 @@ public class PlayerGUI implements IPlayerHandler {
 			btnDoneOnClick();
 		}
 	};
+	
+	/**
+	 * Button event handler: New Card
+	 */
+	private EventHandler<ActionEvent> doDevCard = new EventHandler<ActionEvent>() {
+		@Override
+        public void handle(ActionEvent event) {
+
+			// call event handler
+			btnNewDevOnClick();
+		}
+	};
 
 	/**
 	 * Defines event handlers do be overridden
@@ -200,6 +214,11 @@ public class PlayerGUI implements IPlayerHandler {
 	@Override
 	public void btnDoneOnClick() {
 		System.out.println("Done"); 
+	}
+	
+	@Override
+	public void btnNewDevOnClick() {
+		System.out.println("Dev Card"); 
 	}
 	
 	/**
@@ -229,6 +248,13 @@ public class PlayerGUI implements IPlayerHandler {
 		btnNewVillage.setDisable(true);
 		btnNewRoad.setDisable(true);
 		
+		disableDevBtns();
+	}
+	
+	/**
+	 * disable all development card buttons
+	 */
+	public void disableDevBtns() {
 		for (int i=0;i<5;i++) {
 			btnDevCard[i].setDisable(true);	
 		}
@@ -270,9 +296,41 @@ public class PlayerGUI implements IPlayerHandler {
 	}
 	
 	/** 
-	 * enable/disable dev card Button
+	 * enable/disable development card Button
 	 */
-	public void disableBtnDevCard(Boolean isDisabled) {
+	public void disableBtnNewDevCard(Boolean isDisabled) {
 		btnNewDevCard.setDisable(isDisabled);
+	}
+	
+	/**
+	 * update development card button
+	 * @param dct: type of the card
+	 * @param value: quantity of cards
+	 */
+	public void updateBtnDevCard(DevCardType dct, Integer value) {
+		
+		// update development card button text and enable it
+		switch (dct) {
+		case KNIGHT:
+			btnDevCard[0].setText("KNIGHT " + value.toString());
+			btnDevCard[0].setDisable(false);
+			break;
+		case VICTORY:
+			btnDevCard[1].setText("VICTORY " + value.toString());
+			btnDevCard[1].setDisable(false);
+			break;
+		case ROAD_BUILD:
+			btnDevCard[2].setText("ROAD_BUILD " + value.toString());
+			btnDevCard[2].setDisable(false);
+			break;
+		case MONOPOLY:
+			btnDevCard[3].setText("MONOPOLY " + value.toString());
+			btnDevCard[3].setDisable(false);
+			break;
+		case YEARS_PLENTY:
+			btnDevCard[4].setText("YEARS PLENTY " + value.toString());
+			btnDevCard[4].setDisable(false);
+			break;
+		}
 	}
 }

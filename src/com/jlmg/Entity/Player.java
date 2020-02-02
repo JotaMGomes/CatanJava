@@ -113,6 +113,69 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 	}
 	
 	/**
+	 * btn New Development Card
+	 */
+	@Override
+	public void btnNewDevOnClick() {
+		
+		// get a new development card
+		DevCard myDevCard = GameCT.getNewDevCard();
+		if (myDevCard != null) {
+			lstDevCard.add(myDevCard);
+			
+			// remove 1 WHEAT + 1 SHEEP + 1 ORE
+			hmResCard.put(CellType.WHEAT, hmResCard.get(CellType.WHEAT) - 1);
+			hmResCard.put(CellType.SHEEP, hmResCard.get(CellType.SHEEP) - 1);
+			hmResCard.put(CellType.ORE, hmResCard.get(CellType.ORE) - 1);
+			
+			// update resources GUI
+			updateResources(hmResCard);
+			
+		}
+		
+		// Update development GUI
+		updateDevBtnGUI();
+	}
+	
+	/** 
+	 * update player GUI, development buttons
+	 */
+	public void updateDevBtnGUI() {
+		
+		// disable all development card buttons
+		disableDevBtns();
+		
+		// enable card buttons
+		Integer knight=0, victory=0, readBuild=0, monopoly=0, yearsPlenty=0;
+		
+		for (DevCard dcard : lstDevCard) {
+			switch (dcard.getType()) {
+			case KNIGHT:
+				knight++;
+				updateBtnDevCard(dcard.getType(), knight);
+				break;
+			case VICTORY:
+				victory++;
+				updateBtnDevCard(dcard.getType(), victory);
+				break;
+			case ROAD_BUILD:
+				readBuild++;
+				updateBtnDevCard(dcard.getType(), readBuild);
+				break;
+			case MONOPOLY:
+				monopoly++;
+				updateBtnDevCard(dcard.getType(), monopoly);;
+				break;
+			case YEARS_PLENTY:
+				yearsPlenty++;
+				updateBtnDevCard(dcard.getType(), yearsPlenty);
+				break;
+			}
+		}
+		
+	}
+	
+	/**
 	 * update player resources
 	 */
 	public void updatePlayerResources() {
@@ -142,7 +205,7 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 		disableBtnRoad(!(hmResCard.get(CellType.BRICK) > 0 && hmResCard.get(CellType.WOOD) > 0));
 		
 		/*
-		 * enable city if the player has:
+		 * enable village if the player has:
 		 * 1 BRICK + 1 WOOD + 1 WHEAT + 1 SHEEP
 		 */
 		disableBtnVillage(!(hmResCard.get(CellType.BRICK) > 0 && hmResCard.get(CellType.WOOD) > 0
@@ -155,10 +218,10 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 		disableBtnCity(!(hmResCard.get(CellType.WHEAT) > 1 && hmResCard.get(CellType.ORE) > 2));
 		
 		/* 
-		 * enable dev if the player has:
+		 * enable development if the player has:
 		 * 1 WHEAT + 1 SHEEP + 1 ORE
 		 */
-		disableBtnDevCard(!(hmResCard.get(CellType.WHEAT) > 0 && hmResCard.get(CellType.SHEEP) > 0
+		disableBtnNewDevCard(!(hmResCard.get(CellType.WHEAT) > 0 && hmResCard.get(CellType.SHEEP) > 0
 				&& hmResCard.get(CellType.ORE) > 0));
 	}
 	

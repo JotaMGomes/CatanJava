@@ -30,7 +30,7 @@ public class GameCT {
 	//define arrays
 	public static Dice[] diceCT = new Dice[2];         // dices
 	public static Player[] arPlayer = new Player[3];   // players
-	public static DevCard[] deckDev = new DevCard[25]; // development cards
+	public static DevCard[] deckDev = new DevCard[25]; // development cards deck
 	public static Cell[] arCell = new Cell[19];        // land cells
 	public static Vertex[] arVertex = new Vertex[54];  // vertices
 	public static Edge[] arEdge = new Edge[72];        // edges (roads)
@@ -107,27 +107,25 @@ public class GameCT {
 	 */
 	private static void initDecks() {
 		
-		// create 25 dev cards
-		for (int i = 0; i < 21; i++) {
+		// create 25 development cards
+		for (int i = 0; i < 19; i++) {
 			
 			if (i < 15) 
-				// 14 knigts
+				// 14 knights
 				deckDev[i] = new DevCard(DevCardType.KNIGHT);
-			else if (i < 19)
+			else
 				// 6 victory
 				deckDev[i] = new DevCard(DevCardType.VICTORY);
-			else {
-				// 2 road build
-				deckDev[19] = new DevCard(DevCardType.ROAD_BUILD);
-				deckDev[20] = new DevCard(DevCardType.ROAD_BUILD);
-				//2 monopoly
-				deckDev[21] = new DevCard(DevCardType.MONOPOLY);
-				deckDev[22] = new DevCard(DevCardType.MONOPOLY);
-				//2 years of plenty
-				deckDev[23] = new DevCard(DevCardType.YEARS_PLENTY);
-				deckDev[24] = new DevCard(DevCardType.YEARS_PLENTY);
-			}
 		}
+		// 2 road build
+		deckDev[19] = new DevCard(DevCardType.ROAD_BUILD);
+		deckDev[20] = new DevCard(DevCardType.ROAD_BUILD);
+		//2 monopoly
+		deckDev[21] = new DevCard(DevCardType.MONOPOLY);
+		deckDev[22] = new DevCard(DevCardType.MONOPOLY);
+		//2 years of plenty
+		deckDev[23] = new DevCard(DevCardType.YEARS_PLENTY);
+		deckDev[24] = new DevCard(DevCardType.YEARS_PLENTY);
 	}
 	
 	/**
@@ -242,6 +240,9 @@ public class GameCT {
 			
 			// enable roll dice button
 			arPlayer[currPlayer].disableBtnDice(false);
+			
+			// update development GUIS
+			arPlayer[currPlayer].updateDevBtnGUI();
 			
 		} else if (gameStep == GameState.WAIT_PLAYER_ACTION) {
 			
@@ -375,6 +376,35 @@ public class GameCT {
 			vP.updatePlayerResources();
 		}
 		
+	}
+	
+	public static DevCard getNewDevCard() {
+		
+		// verify if there is cards available
+		boolean isCardAvailable = false;
+		int i = 0;
+		
+		while (i < 25 && !isCardAvailable) {
+			isCardAvailable = deckDev[i].isAvailable();
+		}
+
+		// if there is no more cards on deck, return null
+		if (!isCardAvailable) {
+			return null;
+		}
+		
+		// pick a card randomly
+		isCardAvailable = false;
+		while (!isCardAvailable) {
+			i = (int)(Math.random() * 25);
+			isCardAvailable = deckDev[i].isAvailable();
+		}
+		
+		// set the card as used
+		deckDev[i].setIsAvailable(false);
+		
+		// return card
+		return deckDev[i];
 	}
 	
 	/**

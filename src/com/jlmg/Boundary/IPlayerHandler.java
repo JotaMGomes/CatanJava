@@ -14,4 +14,7 @@ public interface IPlayerHandler {
 	// btn Done event handler
 	public void btnDoneOnClick();
 	
+	// btn New Development card event handler
+	public void btnNewDevOnClick();
+	
 }

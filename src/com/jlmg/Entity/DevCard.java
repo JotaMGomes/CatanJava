@@ -10,16 +10,16 @@ import com.jlmg.util.DevCardType;
 public class DevCard {
 
 	private DevCardType type; // type of the dev card
-	private boolean isUsed;   // flag to identify if the card was already used
+	private boolean isAvailable;   // flag to identify if the card was already used
 	
 	/**
-	 * Initializes a new dev card
+	 * Initializes a new development card
 	 * @param type: type of the card
 	 */
 	public DevCard (DevCardType type) {
 		this.type = type;
-		// set card as not used
-		this.isUsed = false;
+		// set card as available
+		this.isAvailable = true;
 	}
 	
 	/**
@@ -30,12 +30,12 @@ public class DevCard {
 		return type;
 	}
 	
-	public boolean isUsed() {
-		return this.isUsed;
+	public boolean isAvailable() {
+		return this.isAvailable;
 	}
 	
-	public void setUsed(boolean isUsed) {
-		this.isUsed = isUsed;
+	public void setIsAvailable(boolean isAvailable) {
+		this.isAvailable = isAvailable;
 	}
 	
 }
