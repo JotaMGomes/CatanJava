@@ -31,15 +31,17 @@ public class PlayerGUI implements IPlayerHandler {
 	private Button btnRollDices = new Button();
 	private Button btnDevCard[] = new Button[5];
 	private Button btnTrade = new Button();
+	private Button btnTradeRes[] = new Button[10];
 	private Button btnDone = new Button();
 	private Button btnNewDevCard = new Button();
 	private Button btnNewVillage = new Button();
 	private Button btnNewCity = new Button();
 	private Button btnNewRoad = new Button();
 	
-	
-	
 	private Text txtResources;
+	private Text txtTradeRes[] = new Text[5];
+	
+	String strResources[] = {"BRICK:", "WOOD:", "WHEAT:","SHEEP:","ORE:"};
 
 	/**
 	 * Initializes a new player GUI
@@ -49,6 +51,7 @@ public class PlayerGUI implements IPlayerHandler {
 	public PlayerGUI(Integer index, Color vColor) {
 		
 		double BoxWidth = 400;
+		double BoxHeight = 120;
 		
 		// creates the interface
 		GridPane root=new GridPane(); 
@@ -148,7 +151,31 @@ public class PlayerGUI implements IPlayerHandler {
 		
 		root.add(hb3, 0, 4);
 		
-		Scene secondScene = new Scene(root, BoxWidth, 100);
+		// new row (trade)
+		HBox hb4 = new HBox();
+		
+		// resources trade
+		for(int i=0;i<5;i++) {
+			txtTradeRes[i] = new Text();
+			txtTradeRes[i].setFont(Font.font("Verdana",10));
+			txtTradeRes[i].setFill(Color.BLACK);
+			txtTradeRes[i].setText((i == 0 ? "" : "|") + strResources[i] + "0");
+			btnTradeRes[2*i] = new Button();
+			btnTradeRes[2*i].setFont(Font.font("Verdana",8));
+			btnTradeRes[2*i].setText("+");
+			btnTradeRes[2*i+1] = new Button();
+			btnTradeRes[2*i+1].setFont(Font.font("Verdana",8));
+			btnTradeRes[2*i+1].setText("-");
+			txtTradeRes[i].setVisible(false);
+			btnTradeRes[2*i].setVisible(false);
+			btnTradeRes[2*i+1].setVisible(false);
+			
+			hb4.getChildren().addAll(txtTradeRes[i],btnTradeRes[2*i],btnTradeRes[2*i+1]);
+		}
+		
+		root.add(hb4, 0, 5);
+		
+		Scene secondScene = new Scene(root, BoxWidth, BoxHeight);
 		
 		playerStage = new Stage();
 		playerStage.setScene(secondScene);
@@ -331,6 +358,18 @@ public class PlayerGUI implements IPlayerHandler {
 			btnDevCard[4].setText("YEARS PLENTY " + value.toString());
 			btnDevCard[4].setDisable(false);
 			break;
+		}
+	}
+	
+	/**
+	 * enable/disable trade objects (txts and btns)
+	 * @param isDisabled
+	 */
+	public void disableObjsTrade(Boolean isDisabled) {
+		for(int i=0;i<5;i++) {
+			txtTradeRes[i].setVisible(!isDisabled);
+			btnTradeRes[2*i].setVisible(!isDisabled);
+			btnTradeRes[2*i+1].setVisible(!isDisabled);
 		}
 	}
 }

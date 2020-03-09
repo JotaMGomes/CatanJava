@@ -95,6 +95,14 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 	}
 	
 	/**
+	 * Total resource cards
+	 * @return: current number of resource cards
+	 */
+	public int totalCards() {
+		return hmResCard.size();
+	}
+	
+	/**
 	 * btn Roll dices handler
 	 */
 	@Override

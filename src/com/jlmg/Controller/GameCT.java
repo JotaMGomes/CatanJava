@@ -258,6 +258,45 @@ public class GameCT {
 			// enable done button
 		    arPlayer[currPlayer].disableBtnDone(false);
 		
+		} else if (gameStep == GameState.WAIT_DISCARD_CARD) {
+			
+			// disable all buttons from current player
+			arPlayer[currPlayer].disableAllBtns();
+			
+			// while any player has more than 7 cards
+			boolean needsDiscardAction = false;
+			int playerInAction = 0;
+			
+			while (playerInAction < 3) {
+			
+				if (arPlayer[playerInAction].totalCards() > 7) {
+					
+					// update message
+					vBoard.updateMsg("Discard " + Integer.toString(7 - arPlayer[playerInAction].totalCards()) + " cards");
+					
+					// enable discard card buttons
+					arPlayer[playerInAction].disableObjsTrade(false);
+					
+					// enable done button
+				    arPlayer[currPlayer].disableBtnDone(false);
+				    
+				    // exit loop
+				    break;
+					
+				}
+				
+				playerInAction++;
+				
+			}
+			
+			if (!needsDiscardAction) {
+				
+				// update message
+				vBoard.updateMsg("Position the Thief ");
+				
+				// update game state to WAIT_POSITION_THIEF 
+				gameStep = GameState.WAIT_POSITION_THIEF;
+			} 
 		}
 		
 		//update current player message
@@ -299,12 +338,23 @@ public class GameCT {
 	 * roll dices button action
 	 */
 	public static void diceAction() {
+		// roll the dices
 		rollDices();
-		dealCards();
 		
-		// update game state to TRADE
-		gameStep = GameState.WAIT_PLAYER_ACTION;
-		
+		// verify 7 rule
+		if (diceCT[0].getValue() + diceCT[1].getValue() == 7) {
+			
+			// update game state to TRADE
+			gameStep = GameState.WAIT_DISCARD_CARD;
+			
+		} else {
+			// deal the cards
+			dealCards();
+			
+			// update game state to TRADE
+			gameStep = GameState.WAIT_PLAYER_ACTION;
+		}
+
 		// call next stage
 		nextState();
 	}
@@ -378,6 +428,10 @@ public class GameCT {
 		
 	}
 	
+	/**
+	 * get a new development card
+	 * @return: Development card
+	 */
 	public static DevCard getNewDevCard() {
 		
 		// verify if there is cards available
