@@ -27,6 +27,8 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 	private ArrayList<DevCard> lstDevCard = new ArrayList<DevCard>();
 	// hash map of resources cards
 	private HashMap<CellType, Integer> hmResCard = new HashMap<CellType, Integer>();
+	// hash map of trade cards
+	private HashMap<CellType, Integer> hmTradeCard = new HashMap<CellType, Integer>();
 
 	/**
 	 * Initializes a new player
@@ -39,11 +41,19 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 		this.numPoints = 0;
 		this.maxRoad = 0;
 		this.maxArmy = 0;
+		
 		hmResCard.put(CellType.BRICK, 0);
 		hmResCard.put(CellType.WOOD, 0);
 		hmResCard.put(CellType.WHEAT, 0);
 		hmResCard.put(CellType.SHEEP, 0);
 		hmResCard.put(CellType.ORE, 0);
+		
+		hmTradeCard.put(CellType.BRICK, 0);
+		hmTradeCard.put(CellType.WOOD, 0);
+		hmTradeCard.put(CellType.WHEAT, 0);
+		hmTradeCard.put(CellType.SHEEP, 0);
+		hmTradeCard.put(CellType.ORE, 0);
+		
 	}
 	
 	/**
@@ -99,7 +109,19 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 	 * @return: current number of resource cards
 	 */
 	public int totalCards() {
-		return hmResCard.size();
+		
+		// define local counter
+		int vTotalCards=0;
+		
+		// loop through cards types
+		for(CellType card : hmResCard.keySet()) {
+			
+			// add total cards of that type
+			vTotalCards += hmResCard.get(card);
+		}
+		
+		// return local counter
+		return vTotalCards;
 	}
 	
 	/**
@@ -143,6 +165,17 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 		
 		// Update development GUI
 		updateDevBtnGUI();
+	}
+	
+	/**
+	 * btn Trade Card
+	 */
+	@Override
+	public void btnTradeOnClick(CellType card, int btnValue) {
+		
+		System.out.println(card + " " + btnValue);
+		
+		// hmTradeCard
 	}
 	
 	/** 
@@ -231,6 +264,17 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 		 */
 		disableBtnNewDevCard(!(hmResCard.get(CellType.WHEAT) > 0 && hmResCard.get(CellType.SHEEP) > 0
 				&& hmResCard.get(CellType.ORE) > 0));
+	}
+	
+	/**
+	 * clear all values from hmTradeCard
+	 */
+	public void clearTradeValues() {
+		
+		// clear all values from hmTradeCard
+		for(CellType card : hmTradeCard.keySet()) {
+			hmTradeCard.put(card, 0);
+		}
 	}
 	
 }

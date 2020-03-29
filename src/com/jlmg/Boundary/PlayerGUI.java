@@ -1,5 +1,6 @@
 package com.jlmg.Boundary;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import com.jlmg.util.CellType;
@@ -41,8 +42,6 @@ public class PlayerGUI implements IPlayerHandler {
 	private Text txtResources;
 	private Text txtTradeRes[] = new Text[5];
 	
-	String strResources[] = {"BRICK:", "WOOD:", "WHEAT:","SHEEP:","ORE:"};
-
 	/**
 	 * Initializes a new player GUI
 	 * @param index;  the player index
@@ -155,22 +154,29 @@ public class PlayerGUI implements IPlayerHandler {
 		HBox hb4 = new HBox();
 		
 		// resources trade
-		for(int i=0;i<5;i++) {
-			txtTradeRes[i] = new Text();
-			txtTradeRes[i].setFont(Font.font("Verdana",10));
-			txtTradeRes[i].setFill(Color.BLACK);
-			txtTradeRes[i].setText((i == 0 ? "" : "|") + strResources[i] + "0");
-			btnTradeRes[2*i] = new Button();
-			btnTradeRes[2*i].setFont(Font.font("Verdana",8));
-			btnTradeRes[2*i].setText("+");
-			btnTradeRes[2*i+1] = new Button();
-			btnTradeRes[2*i+1].setFont(Font.font("Verdana",8));
-			btnTradeRes[2*i+1].setText("-");
-			txtTradeRes[i].setVisible(false);
-			btnTradeRes[2*i].setVisible(false);
-			btnTradeRes[2*i+1].setVisible(false);
-			
-			hb4.getChildren().addAll(txtTradeRes[i],btnTradeRes[2*i],btnTradeRes[2*i+1]);
+		for(CellType card : CellType.values()) {
+			int i = card.getIndex();
+			if (i != 5) {
+				txtTradeRes[i] = new Text();
+				txtTradeRes[i].setFont(Font.font("Verdana",10));
+				txtTradeRes[i].setFill(Color.BLACK);
+				txtTradeRes[i].setText((i == 0 ? "" : "|") + card.toString() + "0");
+				txtTradeRes[i].setVisible(false);
+				
+				btnTradeRes[2*i] = new Button();
+				btnTradeRes[2*i].setFont(Font.font("Verdana",8));
+				btnTradeRes[2*i].setText("+");
+				btnTradeRes[2*i].setVisible(false);
+				btnTradeRes[2*i].setOnAction(doTrade);
+				
+				btnTradeRes[2*i+1] = new Button();
+				btnTradeRes[2*i+1].setFont(Font.font("Verdana",8));
+				btnTradeRes[2*i+1].setText("-");
+				btnTradeRes[2*i+1].setVisible(false);
+				btnTradeRes[2*i+1].setOnAction(doTrade);
+				
+				hb4.getChildren().addAll(txtTradeRes[i],btnTradeRes[2*i],btnTradeRes[2*i+1]);
+			}
 		}
 		
 		root.add(hb4, 0, 5);
@@ -229,6 +235,20 @@ public class PlayerGUI implements IPlayerHandler {
 			btnNewDevOnClick();
 		}
 	};
+	
+	/**
+	 * Button event handler: Trade
+	 */
+	private EventHandler<ActionEvent> doTrade = new EventHandler<ActionEvent>() {
+		@Override
+        public void handle(ActionEvent event) {
+			
+			int btnIndex = Arrays.asList(btnTradeRes).indexOf(event.getSource());
+
+			// call event handler
+			btnTradeOnClick(CellType.values()[btnIndex/2],1 - 2 * (btnIndex % 2));
+		}
+	};
 
 	/**
 	 * Defines event handlers do be overridden
@@ -248,18 +268,23 @@ public class PlayerGUI implements IPlayerHandler {
 		System.out.println("Dev Card"); 
 	}
 	
+	@Override
+	public void btnTradeOnClick(CellType card, int btnValue) {
+		System.out.println("Trade Card"); 
+	}
+	
 	/**
 	 * update player resources
 	 */
 	public void updateResources(HashMap<CellType, Integer> hmResCard) {
 		
-		String txtRsc = "";
-		txtRsc += "BRICK:"+hmResCard.get(CellType.BRICK);
-		txtRsc += " | WOOD:"+hmResCard.get(CellType.WOOD);
-		txtRsc += " | WHEAT:"+hmResCard.get(CellType.WHEAT);
-		txtRsc += " | SHEEP:"+hmResCard.get(CellType.SHEEP);
-		txtRsc += " | ORE:"+hmResCard.get(CellType.ORE);
-		txtResources.setText(txtRsc);
+		StringBuilder strB_Rsc = new StringBuilder("");
+		boolean firstItem = true;
+		for(CellType card : hmResCard.keySet()) {
+			strB_Rsc.append((firstItem ? "" : " | ") + card.toString() + ":" + hmResCard.get(card));
+			firstItem = false;
+		}
+		txtResources.setText(strB_Rsc.toString());
 		
 	}
 	

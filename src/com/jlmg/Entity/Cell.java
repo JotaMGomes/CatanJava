@@ -12,6 +12,7 @@ public class Cell extends Spot {
 	private CellType vCT;     // The land type
 	private int[] arVertex;   // Array with land vertices
 	private int[] arEdge;     // Array with land edges
+	private boolean isThief;
 	
 	/**
 	 * Initializes a new land 
@@ -21,6 +22,7 @@ public class Cell extends Spot {
 	public Cell(Integer n, CellType ct) {
 		setIndex(n);
 		this.vCT = ct;
+		this.isThief = false;
 	}
 	
 	/**
@@ -58,4 +60,13 @@ public class Cell extends Spot {
 	public int getEdge(int index) {
 		return this.arEdge[index];
 	}	
+	
+	public boolean isThief() {
+		return isThief;
+	}
+
+	public void setThief(boolean isThief) {
+		this.isThief = isThief;
+	}
+	
 }

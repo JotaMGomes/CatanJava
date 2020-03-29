@@ -262,8 +262,9 @@ public class Board extends Application {
 						// update aux variable
 						m++;
 					}
+				} else {
+					GameCT.arCell[k].setThief(true);
 				}
-				
 				
 				// update cell counter
 				k++;

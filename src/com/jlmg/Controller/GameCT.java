@@ -25,6 +25,7 @@ public class GameCT {
 
 	private static Board vBoard; // board object
 	public static Integer currPlayer = 0; // current player number
+	public static int thiefIndex = 7; // index for the thief
 	public static GameState gameStep = GameState.START0; // game state
 	
 	//define arrays
@@ -280,7 +281,11 @@ public class GameCT {
 					// enable done button
 				    arPlayer[currPlayer].disableBtnDone(false);
 				    
+				    // clear cards to discard
+				    arPlayer[currPlayer].clearTradeValues();
+				    
 				    // exit loop
+				    needsDiscardAction = true;
 				    break;
 					
 				}
@@ -293,6 +298,9 @@ public class GameCT {
 				
 				// update message
 				vBoard.updateMsg("Position the Thief ");
+				
+				// show thief spots
+				showHideThiefSpots(true);
 				
 				// update game state to WAIT_POSITION_THIEF 
 				gameStep = GameState.WAIT_POSITION_THIEF;
@@ -467,7 +475,7 @@ public class GameCT {
 	private static void createArrayCells() {
 		
 		// array with dice number of cells
-		final int[] arDiceNumber = {6,3,8,2,4,5,10,5,9,0,5,9,10,11,3,12,8,4,11};
+		final int[] arDiceNumber = {6,3,8,2,4,5,10,5,9,0,6,9,10,11,3,12,8,4,11};
 		
 		// array with cell types
 		CellType[] arCT = {CellType.WOOD, CellType.SHEEP, CellType.SHEEP,
@@ -591,6 +599,17 @@ public class GameCT {
 			for (int l: arCell[k].getArEdge())
 				// link cell to edges
 				arEdge[l].addCell(k);
+		}
+	}
+	
+	/**
+	 * Show/Hide thief spots
+	 * @param isVisible: true/false >> show/hide
+	 */
+	private static void showHideThiefSpots(boolean isVisible) {
+		
+		for(Cell land : arCell) {
+			land.vCircle.setVisible(land.isThief() ? !isVisible : isVisible);
 		}
 	}
 
