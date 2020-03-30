@@ -160,7 +160,7 @@ public class PlayerGUI implements IPlayerHandler {
 				txtTradeRes[i] = new Text();
 				txtTradeRes[i].setFont(Font.font("Verdana",10));
 				txtTradeRes[i].setFill(Color.BLACK);
-				txtTradeRes[i].setText((i == 0 ? "" : "|") + card.toString() + "0");
+				txtTradeRes[i].setText((i == 0 ? "" : "|") + card.toString() + ":0");
 				txtTradeRes[i].setVisible(false);
 				
 				btnTradeRes[2*i] = new Button();
@@ -396,5 +396,19 @@ public class PlayerGUI implements IPlayerHandler {
 			btnTradeRes[2*i].setVisible(!isDisabled);
 			btnTradeRes[2*i+1].setVisible(!isDisabled);
 		}
+	}
+	
+	/**
+	 * update trade values on the GUI
+	 * @param hmTradeCard:  HashMap with total cards to trade by type
+	 */
+	public void updateTradeCardValues(HashMap<CellType, Integer> hmTradeCard) {
+		
+		int i = 0;
+		for(CellType card : hmTradeCard.keySet()) {
+			txtTradeRes[i].setText((i == 0 ? "" : "|") + card.toString() + ":" + hmTradeCard.get(card));
+			i++;
+		}
+		
 	}
 }

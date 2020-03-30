@@ -1,6 +1,8 @@
 package com.jlmg.Controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 import com.jlmg.Boundary.Board;
@@ -273,16 +275,19 @@ public class GameCT {
 				if (arPlayer[playerInAction].totalCards() > 7) {
 					
 					// update message
-					vBoard.updateMsg("Discard " + Integer.toString(7 - arPlayer[playerInAction].totalCards()) + " cards");
+					vBoard.updateMsg("Discard " + Integer.toString(arPlayer[playerInAction].totalCards() / 2) + " cards");
 					
 					// enable discard card buttons
 					arPlayer[playerInAction].disableObjsTrade(false);
 					
 					// enable done button
-				    arPlayer[currPlayer].disableBtnDone(false);
+				    arPlayer[playerInAction].disableBtnDone(false);
 				    
 				    // clear cards to discard
-				    arPlayer[currPlayer].clearTradeValues();
+				    arPlayer[playerInAction].clearTradeValues();
+				    
+				    // set total cards to discard
+				    arPlayer[playerInAction].setTotalCardsToDiscard(arPlayer[playerInAction].totalCards() / 2);
 				    
 				    // exit loop
 				    needsDiscardAction = true;
@@ -606,11 +611,61 @@ public class GameCT {
 	 * Show/Hide thief spots
 	 * @param isVisible: true/false >> show/hide
 	 */
-	private static void showHideThiefSpots(boolean isVisible) {
+	public static void showHideThiefSpots(boolean isVisible) {
 		
+		// Interact through cells and change thief spot visibility
 		for(Cell land : arCell) {
 			land.vCircle.setVisible(land.isThief() ? !isVisible : isVisible);
+			
+			// set up mouse click event
+			if (isVisible && !land.isThief()) {
+				land.addMouseClickEvent();
+			} else {
+				land.removeMouseClickEvent();
+			}
 		}
+	}
+	
+	/**
+	 * remove thief actual spot
+	 */
+	public static void removeThief() {
+		
+		// Interact through cells and set thief to false
+		for(Cell land : arCell) {
+			land.setThief(false);
+		}
+	}
+	
+	/**
+	 * find player to remove card as a thief action
+	 */
+	public static int findPlayerForThiefAction() {
+		
+		// create hashset to store unique player number values
+		HashSet<Integer> hsPlayers = new HashSet<Integer>();  
+		for (int index : arCell[thiefIndex].getArVertex()) {
+			hsPlayers.add(arVertex[index].getPlayerNum());
+		}
+		
+		// remove invalid values
+		hsPlayers.remove(-1);
+		hsPlayers.remove(currPlayer);
+		
+		// test if there is no player
+		if (hsPlayers.size() == 0) {
+			return -1;
+			
+		// test if there is only one player
+		} else if (hsPlayers.size() == 1) {
+			Iterator<Integer> itr = hsPlayers.iterator();  
+			return itr.next();
+		} 
+		
+		// if more than one player, current player must decide which player to steal card from
+		// show player buttons on GUI
+		
+		return -1;
 	}
 
 }

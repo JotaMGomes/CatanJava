@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -37,6 +38,9 @@ public class Board extends Application {
 	
 	// text for messages
 	private Text txtMsg = new Text();
+	
+	// buttons to chose other players
+	private Button btnPlayers[] = new Button[3];
 	
 	/**
 	 * draw objects on stage
@@ -319,6 +323,18 @@ public class Board extends Application {
 			txtDice[i].setText("Dice " + i + ": ");
 			vGrpI.getChildren().add(txtDice[i]);	
 		}
+		
+		// player buttons
+		for (Integer i=0; i<3;i++) {
+			btnPlayers[i] = new Button();
+			btnPlayers[i].setText("Player " + i);
+			btnPlayers[i].setFont(Font.font("Verdana",15));
+			btnPlayers[i].setDisable(true);
+			btnPlayers[i].setLayoutX(posX + 8 * hexSize);
+			btnPlayers[i].setLayoutY(posY + 2 * hexSize + i * 38.0d);
+			vGrpI.getChildren().add(btnPlayers[i]);
+		}
+		
 		
 		return vGrpI;
 	}

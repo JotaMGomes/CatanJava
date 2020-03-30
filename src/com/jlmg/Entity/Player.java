@@ -22,7 +22,7 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 	 * max number of consecutive roads, 
 	 * maximum number of played army cards
 	 */
-	private int numPoints, maxRoad, maxArmy; 
+	private int numPoints, maxRoad, maxArmy, totalCardsToDiscard; 
 	// array of development cards
 	private ArrayList<DevCard> lstDevCard = new ArrayList<DevCard>();
 	// hash map of resources cards
@@ -104,6 +104,14 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 		hmResCard.put(card, hmResCard.get(card)-1);
 	}
 	
+	public int getTotalCardsToDiscard() {
+		return totalCardsToDiscard;
+	}
+
+	public void setTotalCardsToDiscard(int totalCardsToDiscard) {
+		this.totalCardsToDiscard = totalCardsToDiscard;
+	}
+
 	/**
 	 * Total resource cards
 	 * @return: current number of resource cards
@@ -173,9 +181,23 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 	@Override
 	public void btnTradeOnClick(CellType card, int btnValue) {
 		
+		if (getTotalTradeValues() >= totalCardsToDiscard) {
+			return;
+		}
+		
 		System.out.println(card + " " + btnValue);
 		
-		// hmTradeCard
+		hmTradeCard.put(card, hmTradeCard.get(card)+btnValue);
+		
+		if (hmTradeCard.get(card) < 0) {
+			hmTradeCard.put(card, 0);
+			return;
+		} else if (hmTradeCard.get(card) > hmResCard.get(card)){
+			hmTradeCard.put(card,hmResCard.get(card));
+			return;
+		}
+		
+		updateTradeCardValues(hmTradeCard);
 	}
 	
 	/** 
@@ -275,6 +297,18 @@ public class Player extends PlayerGUI implements IPlayerHandler{
 		for(CellType card : hmTradeCard.keySet()) {
 			hmTradeCard.put(card, 0);
 		}
+		
+		updateTradeCardValues(hmTradeCard);
+	}
+	
+	private int getTotalTradeValues() {
+		
+		int i = 0;
+		for(int value : hmTradeCard.values()) {
+			i += value;
+		}
+		
+		return i;
 	}
 	
 }

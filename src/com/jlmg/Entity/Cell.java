@@ -1,6 +1,7 @@
 package com.jlmg.Entity;
 
 import com.jlmg.util.CellType;
+import com.jlmg.Controller.GameCT;
 
 /**
  * Defines a land on the board game
@@ -67,6 +68,22 @@ public class Cell extends Spot {
 
 	public void setThief(boolean isThief) {
 		this.isThief = isThief;
+	}
+	
+	/**
+	 * Handler for mouse click event
+	 */
+	@Override
+	public void handleSpotOnClick() {
+		System.out.println("Cell " + getIndex());
+		
+		// remove thief from all other cells
+		GameCT.removeThief();
+		
+		// set thief to this cell
+		setThief(true);
+		GameCT.showHideThiefSpots(false);
+		GameCT.thiefIndex = getIndex();
 	}
 	
 }
